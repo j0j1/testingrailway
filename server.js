@@ -4,7 +4,7 @@ const app = express();
 const helmet = require("helmet");
 
 const corsOptions = {
-  origin: "http://localhost:3000/",
+  origin: "http://g-4.org",
   credentials: true
 } 
 
