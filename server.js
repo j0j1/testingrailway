@@ -6,7 +6,7 @@ const helmet = require("helmet");
 const corsOptions = {
   origin: "http://g-4.org",
   credentials: true
-} 
+}
 
 require("dotenv").config();
 

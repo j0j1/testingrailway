@@ -180,22 +180,27 @@ const updateTeam = async (req, res) => {
 //validates admin sign in
 const postSignIn = async(req, res) => {
     console.log(req.body);
-    const username = encodeURIComponent(req.body.userName);
-    const password = encodeURIComponent(req.body.password);
-    const cluster = encodeURIComponent(CLUSTER_URI);
-    const authMechanism = "DEFAULT"
-    const uri =  `mongodb+srv://${username}:${password}@${cluster}/?authMechanism=${authMechanism}`;
-    const client = new MongoClient(uri);
-    try {
-        // Establish and verify connection
-        await client.db("admin").command({ ping: 1 });
-        sendMessage(res, 200, "login sucess")
-    } catch(err) {
-        sendMessage(res, 400, "login failure")
-    } finally {
-            // Ensures that the client will close when you finish/error
-            await client.close();
-            }
+    if (req.body.userName==='g4_admin' && req.body.password==='g4g4g4g4'){
+        sendMessage(res, 200,"null", "login sucess")
+    } else {
+        sendMessage(res, 400, "null", "login failure")
+    }
+    // const username = encodeURIComponent(req.body.userName);
+    // const password = encodeURIComponent(req.body.password);
+    // const cluster = encodeURIComponent(CLUSTER_URI);
+    // const authMechanism = "DEFAULT"
+    // const uri =  `mongodb+srv://${username}:${password}@${cluster}/?authMechanism=${authMechanism}`;
+    // const client = new MongoClient(uri);
+    // try {
+    //     // Establish and verify connection
+    //     await client.db("admin").command({ ping: 1 });
+    //     sendMessage(res, 200, "login sucess")
+    // } catch(err) {
+    //     sendMessage(res, 400, "login failure")
+    // } finally {
+    //         // Ensures that the client will close when you finish/error
+    //         await client.close();
+    //         }
 
 }
 
