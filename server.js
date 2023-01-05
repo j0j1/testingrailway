@@ -4,7 +4,7 @@ const app = express();
 const helmet = require("helmet");
 
 const corsOptions = {
-  origin: "http://localhost:3000/",
+  origin: "104.247.238.244",
   credentials: true
 } 
 
