@@ -17,7 +17,8 @@ const {
     postEvent,
     deleteTeam,
     updateTeam,
-    postSignIn
+    postSignIn,
+    helloWorld
 } = require("./handlers");
 
 app.use(helmet())
@@ -37,7 +38,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/', express.static(__dirname + '/'));
 app.use(cors(corsOptions));
-app.get('/api/get_events', getEvents)
+app.get(/api/helloworld, helloWorld);
+app.get('/api/get_events', getEvents);
 app.get('/api/getg4team', getG4team);
 app.post('/api/auth/signin', postSignIn);
 app.post('/api/add_team', postTeam);

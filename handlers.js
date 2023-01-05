@@ -199,6 +199,10 @@ const postSignIn = async(req, res) => {
 
 }
 
+const helloWorld = (req, res) => {
+    sendMessage(res, 200, "null", "hello gorgeous")
+}
+
 
 module.exports = {
     getG4team,
@@ -208,5 +212,6 @@ module.exports = {
     postEvent,
     deleteTeam,
     updateTeam,
-    postSignIn
+    postSignIn,
+    helloWorld
 };
