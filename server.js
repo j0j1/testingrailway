@@ -48,7 +48,7 @@ app.post('/api/send_email', postEmail);
 app.patch('/api/update_team/:teamId', updateTeam)
 app.delete('/api/delete_team/:teamId', deleteTeam);
 
-const port = 8090;
+const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
