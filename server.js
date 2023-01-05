@@ -4,7 +4,7 @@ const app = express();
 const helmet = require("helmet");
 
 const corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "*"
 } 
 
 require("dotenv").config();
