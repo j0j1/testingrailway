@@ -67,8 +67,8 @@ const postEmail = async (req, res) => {
 
     sgMail.setApiKey(SENDGRID_API_KEY)
     const msg = {
-        to: 'jgabereau@gmail.com', // Change to your recipient
-        from: 'g4_contact_emails@g-4.org', // Change to your verified sender
+        to: recipient,
+        from: 'g4_contact_emails@g-4.org',
         replyTo: sender,
         subject: `email from G-4 site / ${subject}`,
         text: text,
