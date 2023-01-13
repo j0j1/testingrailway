@@ -4,36 +4,37 @@ const app = express();
 const helmet = require("helmet");
 
 const corsOptions = {
-  origin: "http://localhost:3000"
-} 
+  origin: "http://g-4.org",
+  credentials: true
+}
 
 require("dotenv").config();
 
 const {
-    getG4team,
-    getEvents,
-    postEmail,
-    postTeam,
-    postEvent,
-    deleteTeam,
-    deleteEvent,
-    updateEvent,
-    updateTeam,
-    postSignIn
+  getG4team,
+  getEvents,
+  postEmail,
+  postTeam,
+  postEvent,
+  deleteTeam,
+  deleteEvent,
+  updateEvent,
+  updateTeam,
+  postSignIn
 } = require("./handlers");
 
 app.use(helmet())
 app.use(function(req, res, next) {
-  res.header(
-    'Access-Control-Allow-Methods',
-    'OPTIONS, HEAD, GET, PUT, POST, DELETE'
-  );
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-  next();
-  });
+res.header(
+  'Access-Control-Allow-Methods',
+  'OPTIONS, HEAD, GET, PUT, POST, DELETE'
+);
+res.header(
+  'Access-Control-Allow-Headers',
+  'Origin, X-Requested-With, Content-Type, Accept'
+);
+next();
+});
 app.use(express.static('./server/assets'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
