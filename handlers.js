@@ -23,6 +23,7 @@ const sendMessage = (res, status, data, message="no message provided") => {
 
 //gets employees from mongodb
 const getG4team = async ( req, res ) => {
+    console.log("Ègetg4teamÈ")
     try {
     await client.connect();
     const db = client.db("G4_SNTTC");
@@ -48,7 +49,7 @@ const getEvents = async ( req, res ) => {
         client.close();    
         sendMessage(res, 200, events, "get team success")
     } catch (err) {
-        sendMessage( res, 400, null, "get team error")
+        sendMessage( res, 400, null, "get event error")
     }
 }
 
@@ -67,8 +68,8 @@ const postEmail = async (req, res) => {
 
     sgMail.setApiKey(SENDGRID_API_KEY)
     const msg = {
-        to: recipient,
-        from: 'g4_contact_emails@g-4.org',
+        to: 'jgabereau@gmail.com', // Change to your recipient
+        from: 'g4_contact_emails@g-4.org', // Change to your verified sender
         replyTo: sender,
         subject: `email from G-4 site / ${subject}`,
         text: text,
@@ -138,6 +139,27 @@ const deleteTeam = async (req, res) => {
     client.close();
 }
 
+const deleteEvent = async (req, res) => {
+    const _id_ = req.params;
+    console.log(_id_)
+    try {
+        await client.connect();
+        const db = client.db("G4_SNTTC");
+        const event = db.collection("events")
+
+        const query = _id_
+        const result = await event.deleteOne(query);
+        if (result.deletedCount === 1) {
+            sendMessage(res, 200, "null", "event deletd")
+          } else {
+            sendMessage(res, 400, "null", "event could not be deleted")
+          }
+        } finally {
+          await client.close();
+        }
+    client.close();
+}
+
 //changes information of employee in mongodb
 const updateTeam = async (req, res) => {
     const teamId = req.params;
@@ -171,6 +193,44 @@ const updateTeam = async (req, res) => {
             sendMessage(res, 200, "null", "team-mate updated")
         } else {
             sendMessage(res, 400, "null", "teamMate could not be updated")
+        }
+    } finally {
+        await client.close();
+    }
+}
+
+const updateEvent = async (req, res) => {
+    const eventId = req.params;
+    let valuesToChange;
+    console.log(eventId)
+    console.log(req.body)
+    if (!req.body.form){
+        valuesToChange = req.body
+    } else {
+        valuesToChange = req.body.form
+    }
+    console.log(valuesToChange)
+    try {
+        await client.connect();
+        const db = client.db("G4_SNTTC");
+        const events = db.collection("events")
+        // create a filter for a team member to update
+        const filter = eventId;
+        // this option instructs the method to create a document if no documents match the filter
+        const options = { upsert: true };
+        // create a document that sets the values to be changed
+        const updateDoc = {
+            $set: valuesToChange,
+        };
+        const result = await events.updateOne(filter, updateDoc, options);
+        console.log(
+        `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,
+        );
+
+        if (result.modifiedCount === 1) {
+            sendMessage(res, 200, "null", "event updated")
+        } else {
+            sendMessage(res, 400, "null", "event could not be updated")
         }
     } finally {
         await client.close();
@@ -216,7 +276,8 @@ module.exports = {
     postTeam,
     postEvent,
     deleteTeam,
+    deleteEvent,
+    updateEvent,
     updateTeam,
-    postSignIn,
-    helloWorld
+    postSignIn
 };
