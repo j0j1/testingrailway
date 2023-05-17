@@ -64,7 +64,7 @@ app.delete('https://testingrailway-production-d638.up.railway.app/api/delete_tea
 app.delete('https://testingrailway-production-d638.up.railway.app/api/delete_event/:eventId', deleteEvent);
 
 
-const port = 8090;
+const port = process.env.PORT;
 app.listen(port, () => {
 console.log(`Example app listening on port ${port}`)
 })
