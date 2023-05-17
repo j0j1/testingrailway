@@ -21,9 +21,26 @@ const sendMessage = (res, status, data, message="no message provided") => {
     return res.status(status).json({ status:status, data:data, message:message })
 }
 
+const getDepartments = async ( req, res ) => {
+    console.log("Ègetg4teamÈ")
+    try {
+    await client.connect();
+    const db = client.db("G4_SNTTC");
+    console.log("connected!");
+    const departments = await db.collection("departments").find().toArray()
+    console.log(departments)
+    client.close();
+    console.log("disconnected!");
+
+    sendMessage(res, 200, departments, "get departments success")
+    } catch (err) {
+        sendMessage( res, 400, null, "get departments error")
+    }
+
+};
+
 //gets employees from mongodb
 const getG4team = async ( req, res ) => {
-    console.log("Ègetg4teamÈ")
     try {
     await client.connect();
     const db = client.db("G4_SNTTC");
@@ -40,6 +57,21 @@ const getG4team = async ( req, res ) => {
 
 };
 
+const getArticles = async ( req, res ) => {
+    try {
+    await client.connect();
+    const db = client.db("G4_SNTTC");
+    console.log("connected!");
+    const team = await db.collection("articles").find().toArray()
+    client.close();
+
+    sendMessage(res, 200, team, "get articles success")
+    } catch (err) {
+        sendMessage( res, 400, null, "get articles error")
+    }
+
+};
+
 //gets events from mongodb
 const getEvents = async ( req, res ) => {
     try {
@@ -47,10 +79,52 @@ const getEvents = async ( req, res ) => {
         const db = client.db("G4_SNTTC");
         const events = await db.collection("events").find().toArray()
         client.close();    
-        sendMessage(res, 200, events, "get team success")
+        sendMessage(res, 200, events, "get event success")
     } catch (err) {
         sendMessage( res, 400, null, "get event error")
     }
+}
+
+const getArticle = async ( req, res ) => {
+    const _id_ = req.params;
+    console.log(_id_)
+    try {
+        await client.connect();
+        const db = client.db("G4_SNTTC");
+        const departments = db.collection("articles")
+
+        const query = _id_;
+        const result = await departments.findOne(query);
+        console.log(result + "reessult")
+        if (!result) {
+            sendMessage(res, 400, null, "article not found")
+          } else {
+            sendMessage(res, 200, result, "article loaded")
+          }
+        } finally {
+          await client.close();
+        };
+}
+
+const getDepartment = async ( req, res ) => {
+    const _id_ = req.params;
+    console.log(_id_)
+    try {
+        await client.connect();
+        const db = client.db("G4_SNTTC");
+        const departments = db.collection("departments")
+
+        const query = _id_;
+        const result = await departments.findOne(query);
+        console.log(result + "reessult")
+        if (!result) {
+            sendMessage(res, 400, null, "department not found")
+          } else {
+            sendMessage(res, 200, result, "department loaded")
+          }
+        } finally {
+          await client.close();
+        };
 }
 
 const postEmail = async (req, res) => {
@@ -58,9 +132,9 @@ const postEmail = async (req, res) => {
     console.log (req.body);
     const text = req.body.message;
     const sender = req.body.email;
-    const recipients = ['AdminSupport@g4tc.org', 'AdminSupport@g4tc.org', 'tmanywounds@g4tc.org', 'margododginghorse@g4tc.org', 'CCardinal@g4tc.org', 'AdminSupport@g4tc.org', 'tsimeon@g4tc.org', ]
+    const recipients = ['AdminSupport@g4tc.org', 'AdminSupport@g4tc.org', 'tmanywounds@g4tc.org', 'margododginghorse@g4tc.org', 'CCardinal@g4tc.org', 'AdminSupport@g4tc.org', 'tsimeon@g4tc.org', 'AdminSupport@g4tc.org', 'AdminSupport@g4tc.org']
     const recipient = recipients[req.body.subject];
-    const subjects = ['general inquires', 'press/publicity', 'justice', 'health',  'reaching home', 'education', 'child and family services']
+    const subjects = ['general inquires', 'press/publicity', 'justice', 'health',  'reaching home', 'education', 'child and family services', 'transport', 'commerce']
     const subject = subjects[req.body.subject]
     console.log(recipients[req.body.subject]);
     console.log(subjects[req.body.subject]);
@@ -68,7 +142,7 @@ const postEmail = async (req, res) => {
 
     sgMail.setApiKey(SENDGRID_API_KEY)
     const msg = {
-        to: 'jgabereau@gmail.com', // Change to your recipient
+        to: recipient, // Change to your recipient
         from: 'g4_contact_emails@g-4.org', // Change to your verified sender
         replyTo: sender,
         subject: `email from G-4 site / ${subject}`,
@@ -87,12 +161,27 @@ const postEmail = async (req, res) => {
         
 }
 
+
 //uploads a new teammember to mongodb
 const postTeam = async (req, res) => {    
     try {
         await client.connect();
         const db = client.db("G4_SNTTC");
         const result = await db.collection("team").insertOne(req.body);
+        res.status(201).json({ status: 201, data: req.body });
+    } catch (err) {
+        console.log(err.stack);
+        res.status(500).json({ status: 500, data: req.body, message: err.message });
+    }
+    client.close();
+
+};
+
+const postArticle = async (req, res) => {    
+    try {
+        await client.connect();
+        const db = client.db("G4_SNTTC");
+        const result = await db.collection("articles").insertOne(req.body);
         res.status(201).json({ status: 201, data: req.body });
     } catch (err) {
         console.log(err.stack);
@@ -116,6 +205,8 @@ const postEvent = async (req, res) => {
     client.close();
 
 }
+
+
 
 //removes employee from mongodb
 const deleteTeam = async (req, res) => {
@@ -199,6 +290,36 @@ const updateTeam = async (req, res) => {
     }
 }
 
+const updateDepartment = async (req, res) => {
+    const department = req.params;
+    let valuesToChange;
+    console.log(department)
+    console.log(req.body)
+    
+    valuesToChange = req.body
+
+    console.log(valuesToChange)
+    try {
+        await client.connect();
+        const db = client.db("G4_SNTTC");
+        const dep = db.collection("departments")
+        // create a filter for a team member to update
+        const query = department;
+        // create a document that sets the values to be changed
+
+        const result = await dep.replaceOne(query, valuesToChange);
+        console.log(`Modified ${result.modifiedCount} document(s)`);
+
+        if (result.modifiedCount === 1) {
+            sendMessage(res, 200, "null", "department updated")
+        } else {
+            sendMessage(res, 400, "null", "department could not be updated")
+        }
+    } finally {
+        await client.close();
+    }
+}
+
 const updateEvent = async (req, res) => {
     const eventId = req.params;
     let valuesToChange;
@@ -269,15 +390,22 @@ const helloWorld = (req, res) => {
 }
 
 
+
 module.exports = {
     getG4team,
     getEvents,
+    getDepartment,
+    getDepartments,
+    getArticles,
+    getArticle,
     postEmail,
     postTeam,
     postEvent,
+    postArticle,
     deleteTeam,
     deleteEvent,
     updateEvent,
     updateTeam,
+    updateDepartment,
     postSignIn
 };

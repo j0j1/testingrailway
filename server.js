@@ -46,22 +46,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/', express.static(__dirname + '/'));
 app.use(cors(corsOptions));
-app.get('https://testingrailway-production-d638.up.railway.app/api/get_events', getEvents)
-app.get('https://testingrailway-production-d638.up.railway.app/api/getg4team', getG4team);
-app.get('https://testingrailway-production-d638.up.railway.app/api/get_department/:department', getDepartment);
-app.get('https://testingrailway-production-d638.up.railway.app/api/get_departments', getDepartments);
-app.get('https://testingrailway-production-d638.up.railway.app/api/get_articles', getArticles);
-app.get('https://testingrailway-production-d638.up.railway.app/api/get_article/:articleID', getArticle);
-app.post('https://testingrailway-production-d638.up.railway.app/api/auth/signin', postSignIn);
-app.post('https://testingrailway-production-d638.up.railway.app/api/add_team', postTeam);
-app.post('https://testingrailway-production-d638.up.railway.app/api/add_event', postEvent);
-app.post('https://testingrailway-production-d638.up.railway.app/api/send_email', postEmail);
-app.post('https://testingrailway-production-d638.up.railway.app/api/add_article', postArticle)
-app.patch('https://testingrailway-production-d638.up.railway.app/api/update_team/:teamId', updateTeam);
-app.patch('https://testingrailway-production-d638.up.railway.app/api/update_event/:eventId', updateEvent);
-app.patch('https://testingrailway-production-d638.up.railway.app/api/update_department/:department', updateDepartment);
-app.delete('https://testingrailway-production-d638.up.railway.app/api/delete_team/:teamId', deleteTeam);
-app.delete('https://testingrailway-production-d638.up.railway.app/api/delete_event/:eventId', deleteEvent);
+app.get('/api/get_events', getEvents)
+app.get('/api/getg4team', getG4team);
+app.get('/api/get_department/:department', getDepartment);
+app.get('/api/get_departments', getDepartments);
+app.get('/api/get_articles', getArticles);
+app.get('/api/get_article/:articleID', getArticle);
+app.post('/api/auth/signin', postSignIn);
+app.post('/api/add_team', postTeam);
+app.post('/api/add_event', postEvent);
+app.post('/api/send_email', postEmail);
+app.post('/api/add_article', postArticle)
+app.patch('/api/update_team/:teamId', updateTeam);
+app.patch('/api/update_event/:eventId', updateEvent);
+app.patch('/api/update_department/:department', updateDepartment);
+app.delete('/api/delete_team/:teamId', deleteTeam);
+app.delete('/api/delete_event/:eventId', deleteEvent);
 
 
 const port = process.env.PORT;
