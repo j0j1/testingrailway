@@ -4,7 +4,7 @@ const app = express();
 const helmet = require("helmet");
 
 const corsOptions = {
-  origin: "http://g-4.org",
+  origin: "https://g-4.org",
   credentials: true
 }
 
